@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.apart.HomeMapper">
+	<insert id="insApartmentInfo" parameterType="ItemDTO">
+
+	INSERT INTO apartment_info
+	(deal_amount,build_year,deal_year,deal_month,deal_day,dong,apartment_name,area_for_exslusive_use,jiban,flr,location_cd)
+	SELECT
+	#{dealAmount},#{buildYear},#{dealYear},#{dealMonth},#{dealDay},#{dong},#{apartmentName},#{areaForExclusiveUse},#{jibun},
+	#{flr},cd
+	FROM location_code
+	WHERE external_cd = #{regionCode}
+	
+	</insert>
+
+	<select id ="selLocationCdList" resultType="LocationCdVO">
+		select cd, local_nm, external_cd
+		from location_code
+		order by local_nm 
+	</select>
+	<select id="selApartmentInfoList" resultType="ApartInfoVO" parameterType="SearchVO">
+		SELECT
+			A.*,B.local_nm
+		FROM apartment_info A
+		INNER JOIN location_code B
+		ON A.location_cd = B.cd
+		WHERE A.location_cd=4
+		AND A.deal_year =#{year}
+		AND A.deal_month = #{mon}
+		AND B.external_cd =#{locationCd}
+	</select>
+</mapper>
